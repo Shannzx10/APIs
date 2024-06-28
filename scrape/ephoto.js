@@ -1,5 +1,6 @@
 const axios = require('axios')
 const cheerio = require('cheerio')
+const FormData = require('form-data');
 
 
 async function ephoto(url, texk) {
