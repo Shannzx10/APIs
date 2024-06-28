@@ -16,7 +16,7 @@ let totalVisitors = 0;
 const visitors = new Set();
 
 const corsOptions = {
-    origin: 'https://shannmoderz.rf.gd',
+    origin: 'https://api-shannmoderz.github.io',
     optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-    res.redirect('https://shannmoderz.rf.gd');
+    res.redirect('https://api-shannmoderz.github.io');
 });
 
 app.get('/stats', (req, res) => {
