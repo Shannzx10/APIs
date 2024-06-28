@@ -56,7 +56,7 @@ app.get('/maker/blackpinklogo', async (req, res) => {
     }
     try {
         const result = await ephoto('https://en.ephoto360.com/create-blackpink-logo-online-free-607.html', query);
-        res.redirect(result);
+        res.json({ status: true, code: 200, author: config.author, result: result });
     } catch (error) {
         res.status(500).json({ status: false, code: 500, author: config.author, result: msg.error });
     }
