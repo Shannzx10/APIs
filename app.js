@@ -49,13 +49,26 @@ app.get('/stats', (req, res) => {
     });
 });
 
-app.get('/maker/blackpinklogo', async (req, res) => {
+app.get('/ephoto360/blackpinklogo', async (req, res) => {
     const query = req.query.query;
     if (!query) {
         return res.status(400).json({ status: false, code: 400, author: config.author, result: msg.query });
     }
     try {
         const result = await ephoto('https://en.ephoto360.com/create-blackpink-logo-online-free-607.html', query);
+        res.redirect(result)
+    } catch (error) {
+        res.status(500).json({ status: false, code: 500, author: config.author, result: msg.error });
+    }
+});
+
+app.get('/ephoto360/glitchtext', async (req, res) => {
+    const query = req.query.query;
+    if (!query) {
+        return res.status(400).json({ status: false, code: 400, author: config.author, result: msg.query });
+    }
+    try {
+        const result = await ephoto('https://en.ephoto360.com/create-digital-glitch-text-effects-online-767.html', query);
         res.redirect(result)
     } catch (error) {
         res.status(500).json({ status: false, code: 500, author: config.author, result: msg.error });
