@@ -49,19 +49,18 @@ app.get('/stats', (req, res) => {
     });
 });
 
-const reqmaker = (link) => async (req, res) => {
+app.get('/maker/blackpinklogo', async (req, res) => {
     const query = req.query.query;
-    const link = req.query.link;
-    if (!query && !link) {
+    if (!query) {
         return res.status(400).json({ status: false, code: 400, author: config.author, result: msg.query });
     }
     try {
-        const result = await ephoto(link, query);
+        const result = await ephoto('https://en.ephoto360.com/create-blackpink-logo-online-free-607.html', query);
         res.redirect(result);
     } catch (error) {
         res.status(500).json({ status: false, code: 500, author: config.author, result: msg.error });
     }
-};
+});
 
 const requestan = (aiFunction) => async (req, res) => {
     const query = req.query.query;
@@ -115,7 +114,6 @@ app.get('/search/seegore', requestan(gore));
 app.get('/search/mangatoon', requestan(mangatoon));
 app.get('/search/wattpad', requestan(wattpad));
 app.get('/search/android1', requestan(android1));
-app.get('/maker/blackpinklogo', reqmaker('https://en.ephoto360.com/create-blackpink-logo-online-free-607.html'));
 
 app.get('/endpoint', (req, res) => {
   const endpoints = [];
