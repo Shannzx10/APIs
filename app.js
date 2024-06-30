@@ -90,9 +90,9 @@ app.get('/search/aptoide', requestan(aptoide.search));
 
 app.get('/downloader/aptoide', requestanID(aptoide.download));
 app.get('/downloader/tiktok', requestanUrl(tiktok));
-app.get('/downloader/tiktokAll', requestanUrl(tiktokAll));
-app.get('/downloader/ttslide', requestan(ttSlide));
-app.get('/download/ttstalk', requestan(ttStalker));
+app.get('/downloader/tiktok-all', requestanUrl(tiktokAll));
+app.get('/downloader/ttslide', requestanUrl(ttSlide));
+app.get('/downloader/ttstalk', requestan(ttStalker));
 app.get('/downloader/instagram', requestanUrl(instagram));
 
 createRoute('writetext', 'https://en.ephoto360.com/write-text-on-wet-glass-online-589.html');
