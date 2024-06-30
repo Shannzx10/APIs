@@ -1,6 +1,104 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 
+=x const APIs = {
+  1: "https://apkcombo.com",
+  5: "http://ws75.aptoide.com/api/7",
+};
+const Proxy = (url) =>
+  url
+    ? `https://translate.google.com/translate?sl=en&tl=fr&hl=en&u=${encodeURIComponent(url)}&client=webapp`
+    : "";
+const api = (ID, path = "/", query = {}) =>
+  (ID in APIs ? APIs[ID] : ID) +
+  path +
+  (query
+    ? "?" +
+      new URLSearchParams(
+        Object.entries({
+          ...query,
+        }),
+      )
+    : "");
+
+const tools = {
+  APIs,
+  Proxy,
+  api,
+};
+
+let apkcombo = {
+  search: async function (args) {
+    let res = await fetch(
+      tools.Proxy(
+        tools.api(1, "/search/" + encodeURIComponent(args.replace(" ", "-"))),
+      ),
+    );
+    let ress = [];
+    res = await res.text();
+    let $ = cheerio.load(res);
+    let link = [];
+    let name = [];
+    $("div.content-apps > a").each(function (a, b) {
+      let nem = $(b).attr("title");
+      name.push(nem);
+      link.push(
+        $(b)
+          .attr("href")
+          .replace(
+            "https://apkcombo-com.translate.goog/",
+            "https://apkcombo.com/",
+          )
+          .replace("/?_x_tr_sl=en&_x_tr_tl=fr&_x_tr_hl=en&_x_tr_pto=wapp", ""),
+      );
+    });
+    for (var i = 0; i < (name.length || link.length); i++) {
+      ress.push({
+        name: name[i],
+        link: link[i],
+      });
+    }
+    return ress;
+  },
+}
+
+let aptoide = {
+  search: async function (args) {
+    let res = await fetch(
+      tools.api(5, "/apps/search", {
+        query: args,
+        limit: 1000,
+      }),
+    );
+
+    let ress = {};
+    res = await res.json();
+    ress = res.datalist.list.map((v) => {
+      return {
+        name: v.name,
+        id: v.package,
+      };
+    });
+    return ress;
+  },
+  download: async function (id) {
+    let res = await fetch(
+      tools.api(5, "/apps/search", {
+        query: id,
+        limit: 1,
+      }),
+    );
+
+    res = await res.json();
+    return {
+      img: res.datalist.list[0].icon,
+      developer: res.datalist.list[0].store.name,
+      appname: res.datalist.list[0].name,
+      link: res.datalist.list[0].file.path,
+    };
+  },
+};
+
 function PlayStore(search) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -435,4 +533,4 @@ function wattpad(query) {
 	})
 }
 
-module.exports = { PlayStore, BukaLapak, happymod, stickersearch, filmapik21, webtoons, resep, gore, mangatoon, android1, wattpad }
+module.exports = { PlayStore, apkcombo, aptoide, BukaLapak, happymod, stickersearch, filmapik21, webtoons, resep, gore, mangatoon, android1, wattpad }
