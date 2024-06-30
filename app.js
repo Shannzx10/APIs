@@ -143,7 +143,7 @@ app.get('/search/apkcombo', requestan(apkcombo.search));
 app.get('/search/aptoide', requestan(aptoide.search));
 app.get('/search/tiktok', requestan(tiktoks));
 
-app.get('/downloader/aptoide', requestanID(aptoide.download));
+app.get('/downloader/aptoidedl', requestanID(aptoide.download));
 app.get('/downloader/tiktok', requestanUrl(tiktok));
 app.get('/downloader/tiktok2', requestanUrl(tiktokAll));
 app.get('/downloader/ttslide', requestanUrl(ttSlide));
