@@ -1,9 +1,9 @@
 const express = require('express');
 const cors = require('cors');
-const { requestan, requestanID, requestanUrl, createRoute } = require('./func')
 const { thinkany, tudouai, useadrenaline, GoodyAI, luminai, blackbox, CgtAi, Simsimi, leptonAi, yousearch, LetmeGpt, AoyoAi } = require('./scrape/ai');
 const { PlayStore, apkcombo, aptoide, BukaLapak, happymod, stickersearch, filmapik21, webtoons, resep, gore, mangatoon, android1, wattpad } = require('./scrape/search');
 const { tiktok, tiktokAll, ttStalker, ttSlide, instagram } = require('./scrape/downloader');
+const { ephoto } = require('./scrape/ephoto')
 const config = require('./config');
 const msg = config.messages;
 const app = express();
@@ -28,6 +28,60 @@ app.use((req, res, next) => {
     }
     next();
 });
+
+const createRoute = (path, url) => {
+  app.get(`/ephoto360/${path}`, async (req, res) => {
+    const query = req.query.query;
+    if (!query) {
+      return res.status(400).json({ status: false, code: 400, author: config.author, result: msg.query });
+    }
+    try {
+      const result = await ephoto(url, query);
+      res.redirect(result);
+    } catch (error) {
+      res.status(500).json({ status: false, code: 500, author: config.author, result: msg.error });
+    }
+  });
+};
+
+const requestan = (aiFunction) => async (req, res) => {
+    const query = req.query.query;
+    if (!query) {
+        return res.status(400).json({ status: false, code: 400, author: config.author, result: msg.query });
+    }
+    try {
+        const result = await aiFunction(query);
+        res.json({ status: true, code: 200, author: config.author, result: result });
+    } catch (error) {
+        res.status(500).json({ status: false, code: 500, author: config.author, result: msg.error });
+    }
+};
+
+const requestanID = (aiFunction) => async (req, res) => {
+    const id = req.query.id;
+    if (!id) {
+        return res.status(400).json({ status: false, code: 400, author: config.author, result: msg.id });
+    }
+    try {
+        const result = await aiFunction(id);
+        res.json({ status: true, code: 200, author: config.author, result: result });
+    } catch (error) {
+        res.status(500).json({ status: false, code: 500, author: config.author, result: msg.error });
+    }
+};
+
+const requestanUrl = (aiFunction) => async (req, res) => {
+    const url = req.query.url;
+    if (!url) {
+        return res.status(400).json({ status: false, code: 400, author: config.author, result: msg.url });
+    }
+    try {
+        const result = await aiFunction(url);
+        res.json({ status: true, code: 200, author: config.author, result: result });
+    } catch (error) {
+        res.status(500).json({ status: false, code: 500, author: config.author, result: msg.error });
+    }
+};
 
 app.get('/', (req, res) => {
     res.redirect('https://api-shannmoderz.github.io');
