@@ -3,7 +3,7 @@ const cors = require('cors');
 const { requestan, requestanID, requestanUrl, createRoute } = require('./func')
 const { thinkany, tudouai, useadrenaline, GoodyAI, luminai, blackbox, CgtAi, Simsimi, leptonAi, yousearch, LetmeGpt, AoyoAi } = require('./scrape/ai');
 const { PlayStore, apkcombo, aptoide, BukaLapak, happymod, stickersearch, filmapik21, webtoons, resep, gore, mangatoon, android1, wattpad } = require('./scrape/search');
-const { tiktok, tiktokAll, ttStalker, ttSilde, instagram } = require('./scrape/downloader');
+const { tiktok, tiktokAll, ttStalker, ttSlide, instagram } = require('./scrape/downloader');
 const config = require('./config');
 const msg = config.messages;
 const app = express();
@@ -92,7 +92,7 @@ app.get('/downloader/aptoide', requestanID(aptoide.download));
 app.get('/downloader/tiktok', requestanUrl(tiktok));
 app.get('/downloader/tiktokAll', requestanUrl(tiktokAll));
 app.get('/downloader/ttslide', requestan(ttSlide));
-app.get('/download/ttstalk', requestan(ttStalk));
+app.get('/download/ttstalk', requestan(ttStalker));
 app.get('/downloader/instagram', requestanUrl(instagram));
 
 createRoute('writetext', 'https://en.ephoto360.com/write-text-on-wet-glass-online-589.html');
