@@ -1,9 +1,9 @@
 const express = require('express');
-const cors = require('cors'); 
-const cron = require('node-cron');
+const cors = require('cors');
+const { requestan, requestanID, requestanUrl, createRoute } = require('./func')
 const { thinkany, tudouai, useadrenaline, GoodyAI, luminai, blackbox, CgtAi, Simsimi, leptonAi, yousearch, LetmeGpt, AoyoAi } = require('./scrape/ai');
-const { PlayStore, BukaLapak, happymod, stickersearch, filmapik21, webtoons, resep, gore, mangatoon, android1, wattpad } = require('./scrape/search');
-const { ephoto } = require('./scrape/ephoto');
+const { PlayStore, apkcombo, aptoide, BukaLapak, happymod, stickersearch, filmapik21, webtoons, resep, gore, mangatoon, android1, wattpad } = require('./scrape/search');
+const { tiktok, tiktokAll, ttStalker, ttSilde, instagram } = require('./scrape/downloader');
 const config = require('./config');
 const msg = config.messages;
 const app = express();
@@ -15,11 +15,7 @@ let totalRequests = 0;
 let totalVisitors = 0;
 const visitors = new Set();
 
-const corsOptions = {
-    origin: 'https://api-shannmoderz.github.io',
-    optionsSuccessStatus: 200
-};
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use((req, res, next) => {
     totalRequests++;
@@ -49,34 +45,6 @@ app.get('/stats', (req, res) => {
     });
 });
 
-const createRoute = (path, url) => {
-  app.get(`/ephoto360/${path}`, async (req, res) => {
-    const query = req.query.query;
-    if (!query) {
-      return res.status(400).json({ status: false, code: 400, author: config.author, result: msg.query });
-    }
-    try {
-      const result = await ephoto(url, query);
-      res.redirect(result);
-    } catch (error) {
-      res.status(500).json({ status: false, code: 500, author: config.author, result: msg.error });
-    }
-  });
-};
-
-const requestan = (aiFunction) => async (req, res) => {
-    const query = req.query.query;
-    if (!query) {
-        return res.status(400).json({ status: false, code: 400, author: config.author, result: msg.query });
-    }
-    try {
-        const result = await aiFunction(query);
-        res.json({ status: true, code: 200, author: config.author, result: result });
-    } catch (error) {
-        res.status(500).json({ status: false, code: 500, author: config.author, result: msg.error });
-    }
-};
-
 app.get('/ai/tudou', async (req, res) => {
     const query = req.query.query
     const prompt = req.query.prompt
@@ -105,6 +73,7 @@ app.get('/ai/yousearch', requestan(yousearch));
 app.get('/ai/letmegpt', requestan(LetmeGpt));
 app.get('/ai/aoyo', requestan(AoyoAi));
 app.get('/ai/prod', requestan(useadrenaline));
+
 app.get('/search/playstore', requestan(PlayStore));
 app.get('/search/bukalapak', requestan(BukaLapak));
 app.get('/search/happymod', requestan(happymod));
@@ -116,6 +85,15 @@ app.get('/search/seegore', requestan(gore));
 app.get('/search/mangatoon', requestan(mangatoon));
 app.get('/search/wattpad', requestan(wattpad));
 app.get('/search/android1', requestan(android1));
+app.get('/search/apkcombo', requestan(apkcombo.search));
+app.get('/search/aptoide', requestan(aptoide.search));
+
+app.get('/downloader/aptoide', requestanID(aptoide.download));
+app.get('/downloader/tiktok', requestanUrl(tiktok));
+app.get('/downloader/tiktokAll', requestanUrl(tiktokAll));
+app.get('/downloader/ttslide', requestan(ttSlide));
+app.get('/download/ttstalk', requestan(ttStalk));
+app.get('/downloader/instagram', requestanUrl(instagram));
 
 createRoute('writetext', 'https://en.ephoto360.com/write-text-on-wet-glass-online-589.html');
 createRoute('blackpinklogo', 'https://en.ephoto360.com/create-blackpink-logo-online-free-607.html');
@@ -168,13 +146,6 @@ app.get('/endpoint', (req, res) => {
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ status: false, code: 500, author: config.author, result: msg.error });
-});
-
-cron.schedule('0 0 * * *', () => {
-  totalRequests = 0;
-  totalVisitors = 0;
-  visitors.clear();
-  console.log('Resetting counters...');
 });
 
 app.listen(PORT, () => {
