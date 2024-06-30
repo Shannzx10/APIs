@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { thinkany, tudouai, useadrenaline, GoodyAI, luminai, blackbox, CgtAi, Simsimi, leptonAi, yousearch, LetmeGpt, AoyoAi } = require('./scrape/ai');
 const { PlayStore, apkcombo, aptoide, BukaLapak, happymod, stickersearch, filmapik21, webtoons, resep, gore, mangatoon, android1, wattpad } = require('./scrape/search');
-const { tiktok, tiktokAll, ttStalker, ttSlide, instagram } = require('./scrape/downloader');
+const { tiktok, tiktoks, capcut, tiktokAll, ttStalker, ttSlide, instagram } = require('./scrape/downloader');
 const { ephoto } = require('./scrape/ephoto')
 const config = require('./config');
 const msg = config.messages;
@@ -141,11 +141,13 @@ app.get('/search/wattpad', requestan(wattpad));
 app.get('/search/android1', requestan(android1));
 app.get('/search/apkcombo', requestan(apkcombo.search));
 app.get('/search/aptoide', requestan(aptoide.search));
+app.get('/search/tiktok', requestan(tiktoks));
 
 app.get('/downloader/aptoide', requestanID(aptoide.download));
 app.get('/downloader/tiktok', requestanUrl(tiktok));
-app.get('/downloader/tiktok-all', requestanUrl(tiktokAll));
+app.get('/downloader/tiktok2', requestanUrl(tiktokAll));
 app.get('/downloader/ttslide', requestanUrl(ttSlide));
+app.get('/downloader/capcut', requestanUrl(capcut));
 app.get('/downloader/ttstalk', requestan(ttStalker));
 app.get('/downloader/instagram', requestanUrl(instagram));
 
