@@ -1,7 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 
-=x const APIs = {
+const APIs = {
   1: "https://apkcombo.com",
   5: "http://ws75.aptoide.com/api/7",
 };
