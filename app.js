@@ -3,7 +3,7 @@ const cors = require('cors');
 const path = require('path');
 const axios = require('axios');
 const fs = require('fs')
-require('dotenv').config();
+('dotenv').config();
 const { thinkany, tudouai, useadrenaline, GoodyAI, luminai, blackbox, CgtAi, Simsimi, leptonAi, yousearch, LetmeGpt, AoyoAi } = require('./scrape/ai');
 const { PlayStore, apkcombo, aptoide, BukaLapak, happymod, stickersearch, filmapik21, webtoons, resep, gore, mangatoon, android1, wattpad } = require('./scrape/search');
 const { tiktok, tiktoks, capcut, tiktokAll, ttStalker, ttSlide, instagram } = require('./scrape/downloader');
@@ -163,12 +163,12 @@ function uuid() {
 }
 
 app.get('/sswebhp', (req, res) => {
-  const link = req.query.link;
-  if (!link) {
-    return res.status(400).send('Parameter "link" is required');
+  const url = req.query.url;
+  if (!url) {
+    return res.status(400).json({ status: false, code: 400, author: config.author, result: msg.url });
   }
 
-  ssweb(link, 'phone')
+  ssweb(url, 'phone')
     .then((imageBuffer) => {
       const fileName = `${uuid()}.jpg`;
       const filePath = path.join(__dirname, 'tmp', fileName);
@@ -177,7 +177,7 @@ app.get('/sswebhp', (req, res) => {
         if (err) {
           return res.status(500).send(`Error saving image: ${err.message}`);
         }
-        res.send(`https://shannmoderz-95f1d384b6d2.herokuapp.com/tmp/${fileName}`);
+        return res.status(200).json({ status: true, code: 200, author: config.author, result: `https://shannmoderz-95f1d384b6d2.herokuapp.com/tmp/${fileName}`
       });
     })
     .catch((error) => {
