@@ -2,12 +2,12 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const axios = require('axios');
-const fs = require('fs')
+const fs = require('fs');
 const dotenv = require('dotenv').config();
 const { thinkany, tudouai, useadrenaline, GoodyAI, luminai, blackbox, CgtAi, Simsimi, leptonAi, yousearch, LetmeGpt, AoyoAi } = require('./scrape/ai');
 const { PlayStore, apkcombo, aptoide, BukaLapak, happymod, stickersearch, filmapik21, webtoons, resep, gore, mangatoon, android1, wattpad } = require('./scrape/search');
 const { tiktok, tiktoks, capcut, tiktokAll, ttStalker, ttSlide, instagram } = require('./scrape/downloader');
-const { ephoto } = require('./scrape/ephoto')
+const { ephoto } = require('./scrape/ephoto');
 const config = require('./config');
 const msg = config.messages;
 const app = express();
@@ -37,18 +37,18 @@ app.use((req, res, next) => {
 });
 
 const createRoute = (path, url) => {
-  app.get(`/ephoto360/${path}`, async (req, res) => {
-    const query = req.query.query;
-    if (!query) {
-      return res.status(400).json({ status: false, code: 400, author: config.author, result: msg.query });
-    }
-    try {
-      const result = await ephoto(url, query);
-      res.redirect(result);
-    } catch (error) {
-      res.status(500).json({ status: false, code: 500, author: config.author, result: msg.error });
-    }
-  });
+    app.get(`/ephoto360/${path}`, async (req, res) => {
+        const query = req.query.query;
+        if (!query) {
+            return res.status(400).json({ status: false, code: 400, author: config.author, result: msg.query });
+        }
+        try {
+            const result = await ephoto(url, query);
+            res.redirect(result);
+        } catch (error) {
+            res.status(500).json({ status: false, code: 500, author: config.author, result: msg.error });
+        }
+    });
 };
 
 const requestan = (aiFunction) => async (req, res) => {
@@ -113,76 +113,81 @@ async function elxyz(q, sesi, mdl) {
 }
 
 const ssweb = (url, device = 'desktop') => {
-  return new Promise((resolve, reject) => {
-    const base = 'https://www.screenshotmachine.com';
-    const param = {
-      url: url,
-      device: device,
-      cacheLimit: 0
-    };
+    return new Promise((resolve, reject) => {
+        const base = 'https://www.screenshotmachine.com';
+        const param = {
+            url: url,
+            device: device,
+            cacheLimit: 0
+        };
 
-    axios({
-      url: base + '/capture.php',
-      method: 'POST',
-      data: new URLSearchParams(Object.entries(param)),
-      headers: {
-        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
-      }
-    }).then((data) => {
-      const cookies = data.headers['set-cookie'];
-      if (data.data.status == 'success') {
-        axios.get(base + '/' + data.data.link, {
-          headers: {
-            'cookie': cookies.join('')
-          },
-          responseType: 'arraybuffer'
-        }).then(({ data }) => {
-          resolve(data);
+        axios({
+            url: base + '/capture.php',
+            method: 'POST',
+            data: new URLSearchParams(Object.entries(param)),
+            headers: {
+                'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            }
+        }).then((data) => {
+            const cookies = data.headers['set-cookie'];
+            if (data.data.status == 'success') {
+                axios.get(base + '/' + data.data.link, {
+                    headers: {
+                        'cookie': cookies.join('')
+                    },
+                    responseType: 'arraybuffer'
+                }).then(({ data }) => {
+                    resolve(data);
+                }).catch(reject);
+            } else {
+                reject(`Link Error: ${data.data.message}`);
+            }
         }).catch(reject);
-      } else {
-        reject(`Link Error: ${data.data.message}`);
-      }
-    }).catch(reject);
-  });
+    });
 };
 
 function uuid() {
-  let d = new Date().getTime();
-  let d2 = (performance && performance.now && (performance.now() * 1000)) || 0;
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    let r = Math.random() * 16;
-    if (d > 0) {
-      r = (d + r) % 16 | 0;
-      d = Math.floor(d / 16);
-    } else {
-      r = (d2 + r) % 16 | 0;
-      d2 = Math.floor(d2 / 16);
-    }
-    return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
-  });
+    let d = new Date().getTime();
+    let d2 = (performance && performance.now && (performance.now() * 1000)) || 0;
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        let r = Math.random() * 16;
+        if (d > 0) {
+            r = (d + r) % 16 | 0;
+            d = Math.floor(d / 16);
+        } else {
+            r = (d2 + r) % 16 | 0;
+            d2 = Math.floor(d2 / 16);
+        }
+        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+    });
 }
 
 app.get('/sswebhp', (req, res) => {
-  const url = req.query.url;
-  if (!url) {
-    return res.status(400).json({ status: false, code: 400, author: config.author, result: msg.url });
-  }
+    const url = req.query.url;
+    if (!url) {
+        return res.status(400).json({ status: false, code: 400, author: config.author, result: msg.url });
+    }
 
-  ssweb(url, 'phone')
-    .then((imageBuffer) => {
-      const fileName = `${uuid()}.jpg`;
-      const filePath = path.join(__dirname, 'tmp', fileName);
+    ssweb(url, 'phone')
+        .then((imageBuffer) => {
+            const fileName = `${uuid()}.jpg`;
+            const filePath = path.join(__dirname, 'tmp', fileName);
 
-      fs.writeFile(filePath, imageBuffer, (err) => {
-        if (err) {
-          return res.status(500).send(`Error saving image: ${err.message}`);
-        }
-        return res.status(200).json({ status: true, code: 200, author: config.author, result: `https://shannmoderz-95f1d384b6d2.herokuapp.com/tmp/${fileName}`
-      });
-    })
-    .catch((error) => {
-      res.status(500).send(`Error: ${error.message}`);
-    });
+            fs.writeFile(filePath, imageBuffer, (err) => {
+                if (err) {
+                    return res.status(500).send(`Error saving image: ${err.message}`);
+                }
+                return res.status(200).json({
+                    status: true,
+                    code: 200,
+                    author: config.author,
+                    result: `https://shannmoderz-95f1d384b6d2.herokuapp.com/tmp/${fileName}`
+                });
+            });
+        })
+        .catch((error) => {
+            res.status(500).send(`Error: ${error.message}`);
+        });
 });
 
 app.post('/chat', async (req, res) => {
@@ -216,8 +221,8 @@ app.get('/stats', (req, res) => {
 });
 
 app.get('/ai/tudou', async (req, res) => {
-    const query = req.query.query
-    const prompt = req.query.prompt
+    const query = req.query.query;
+    const prompt = req.query.prompt;
     if (!query) {
         return res.status(400).json({ status: false, code: 400, author: config.author, result: msg.query });
     }
@@ -299,20 +304,20 @@ createRoute('galaxystyle', 'https://en.ephoto360.com/create-galaxy-style-free-na
 createRoute('lighteffect', 'https://en.ephoto360.com/create-light-effects-green-neon-online-429.html');
 
 app.get('/endpoint', (req, res) => {
-  const endpoints = [];
-  app._router.stack.forEach((layer) => {
-    if (layer.route) {
-      const methods = [];
-      for (const method in layer.route.methods) {
-        methods.push(method.toUpperCase());
-      }
-      endpoints.push({
-        path: layer.route.path,
-        methods: methods,
-      });
-    }
-  });
-  res.json(endpoints);
+    const endpoints = [];
+    app._router.stack.forEach((layer) => {
+        if (layer.route) {
+            const methods = [];
+            for (const method in layer.route.methods) {
+                methods.push(method.toUpperCase());
+            }
+            endpoints.push({
+                path: layer.route.path,
+                methods: methods,
+            });
+        }
+    });
+    res.json(endpoints);
 });
 
 app.use((err, req, res, next) => {
