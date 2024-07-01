@@ -120,7 +120,7 @@ app.post('/chat', async (req, res) => {
 });
 
 app.get('/chatbot', (req, res) => {
-    res.render('index', { title: 'My Express App' });
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.get('/', (req, res) => {
