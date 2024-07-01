@@ -109,6 +109,56 @@ async function elxyz(q, sesi, mdl) {
     }
 }
 
+const ssweb = (url, device = 'desktop') => {
+  return new Promise((resolve, reject) => {
+    const base = 'https://www.screenshotmachine.com';
+    const param = {
+      url: url,
+      device: device,
+      cacheLimit: 0
+    };
+
+    axios({
+      url: base + '/capture.php',
+      method: 'POST',
+      data: new URLSearchParams(Object.entries(param)),
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
+      }
+    }).then((data) => {
+      const cookies = data.headers['set-cookie'];
+      if (data.data.status == 'success') {
+        axios.get(base + '/' + data.data.link, {
+          headers: {
+            'cookie': cookies.join('')
+          },
+          responseType: 'arraybuffer'
+        }).then(({ data }) => {
+          resolve(data);
+        }).catch(reject);
+      } else {
+        reject(`Link Error: ${data.data.message}`);
+      }
+    }).catch(reject);
+  });
+};
+
+app.get('/sswebhp', (req, res) => {
+  const link = req.query.link;
+  if (!link) {
+    return res.status(400).send('Parameter "link" is required');
+  }
+
+  ssweb(link, 'phone')
+    .then((imageBuffer) => {
+      res.set('Content-Type', 'image/png');
+      res.send(imageBuffer);
+    })
+    .catch((error) => {
+      res.status(500).send(`Error: ${error.message}`);
+    });
+});
+
 app.post('/chat', async (req, res) => {
     const { message, sessionId, character } = req.body;
     try {
