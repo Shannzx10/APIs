@@ -40,6 +40,7 @@
             margin-bottom: 10px;
             padding: 10px;
             border-radius: 5px;
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
         }
         .message.user {
             background-color: #007bff;
@@ -121,9 +122,10 @@
 
         function addMessage(sender, text) {
             const messages = document.getElementById('messages');
-            const messageElement = document.createElement('div');
+            const messageElement = document.createElement('pre'); // Use <pre> to preserve formatting
             messageElement.className = `message ${sender}`;
             messageElement.textContent = text;
+
             messages.appendChild(messageElement);
             messages.scrollTop = messages.scrollHeight;
         }
