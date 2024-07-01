@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
+require('dotenv').config();
 const { thinkany, tudouai, useadrenaline, GoodyAI, luminai, blackbox, CgtAi, Simsimi, leptonAi, yousearch, LetmeGpt, AoyoAi } = require('./scrape/ai');
 const { PlayStore, apkcombo, aptoide, BukaLapak, happymod, stickersearch, filmapik21, webtoons, resep, gore, mangatoon, android1, wattpad } = require('./scrape/search');
 const { tiktok, tiktoks, capcut, tiktokAll, ttStalker, ttSlide, instagram } = require('./scrape/downloader');
@@ -15,6 +17,8 @@ let totalRequests = 0;
 let totalVisitors = 0;
 const visitors = new Set();
 
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 app.use(cors());
 
 app.use((req, res, next) => {
@@ -82,6 +86,39 @@ const requestanUrl = (aiFunction) => async (req, res) => {
         res.status(500).json({ status: false, code: 500, author: config.author, result: msg.error });
     }
 };
+
+async function elxyz(q, sesi, mdl) {
+    try {
+        const response = await fetch('https://elxyz.me/api/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Mobile/15E148',
+            },
+            body: JSON.stringify({
+                prompt: q,
+                sessionId: sesi,
+                character: mdl
+            }),
+        });
+        const data = await response.json();
+        return data.data.answer;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+
+app.post('/chat', async (req, res) => {
+    const { message, sessionId, character } = req.body;
+    try {
+        const response = await elxyz(message, sessionId, character);
+        res.json({ answer: response });
+    } catch (error) {
+        res.status(500).json({ error: 'Something went wrong' });
+    }
+});
+
 
 app.get('/', (req, res) => {
     res.redirect('https://api-shannmoderz.github.io');
