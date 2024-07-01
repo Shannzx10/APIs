@@ -119,6 +119,9 @@ app.post('/chat', async (req, res) => {
     }
 });
 
+app.get('/chatbot', (req, res) => {
+    res.render('index', { title: 'My Express App' });
+});
 
 app.get('/', (req, res) => {
     res.redirect('https://api-shannmoderz.github.io');
