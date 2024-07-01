@@ -163,28 +163,28 @@ function uuid() {
 }
 
 app.get('/sswebhp', (req, res) => {
-  const url = req.query.url;
-  if (!url) {
-    return res.status(400).json({ status: false, code: 400, author: config.author, result: msg.url });
+  const link = req.query.link;
+  if (!link) {
+    return res.status(400).send('Parameter "link" is required');
   }
 
-  ssweb(url, 'phone')
+  ssweb(link, 'phone')
     .then((imageBuffer) => {
       const fileName = `${uuid()}.jpg`;
       const filePath = path.join(__dirname, 'tmp', fileName);
 
       fs.writeFile(filePath, imageBuffer, (err) => {
         if (err) {
-          const urlResult = `https://shannmoderz-95f1d384b6d2.herokuapp.com/tmp/${fileName}`
           return res.status(500).send(`Error saving image: ${err.message}`);
         }
-        return res.status(200).json({ status: true, code: 200, author: config.author, result: urlResult
+        res.send(`http://localhost:${port}/tmp/${fileName}`);
       });
     })
     .catch((error) => {
       res.status(500).send(`Error: ${error.message}`);
     });
 });
+
 
 app.post('/chat', async (req, res) => {
     const { message, sessionId, character } = req.body;
