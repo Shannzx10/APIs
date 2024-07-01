@@ -19,6 +19,7 @@ let totalVisitors = 0;
 const visitors = new Set();
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/tmp', express.static(path.join(__dirname, 'tmp')));
 app.use(express.json());
 app.use(cors());
 
@@ -144,6 +145,22 @@ const ssweb = (url, device = 'desktop') => {
   });
 };
 
+function uuid() {
+  let d = new Date().getTime();
+  let d2 = (performance && performance.now && (performance.now() * 1000)) || 0;
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    let r = Math.random() * 16;
+    if (d > 0) {
+      r = (d + r) % 16 | 0;
+      d = Math.floor(d / 16);
+    } else {
+      r = (d2 + r) % 16 | 0;
+      d2 = Math.floor(d2 / 16);
+    }
+    return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+  });
+}
+
 app.get('/sswebhp', (req, res) => {
   const link = req.query.link;
   if (!link) {
@@ -152,8 +169,15 @@ app.get('/sswebhp', (req, res) => {
 
   ssweb(link, 'phone')
     .then((imageBuffer) => {
-      res.set('Content-Type', 'image/png');
-      res.send(imageBuffer);
+      const fileName = `${uuid()}.jpg`;
+      const filePath = path.join(__dirname, 'tmp', fileName);
+
+      fs.writeFile(filePath, imageBuffer, (err) => {
+        if (err) {
+          return res.status(500).send(`Error saving image: ${err.message}`);
+        }
+        res.send(`https://shannmoderz-95f1d384b6d2.herokuapp.com/tmp/${fileName}`);
+      });
     })
     .catch((error) => {
       res.status(500).send(`Error: ${error.message}`);
