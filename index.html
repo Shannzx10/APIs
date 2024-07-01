@@ -3,66 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal Control</title>
+    <title>Terminal</title>
+    <script src="/socket.io/socket.io.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
             margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
+            padding: 20px;
         }
         #terminal {
-            flex: 1;
-            background: #000;
-            color: #0f0;
+            background-color: #000;
+            color: #fff;
             padding: 10px;
-            overflow-y: auto;
-        }
-        #input {
-            display: flex;
+            height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
         }
         #command {
-            flex: 1;
+            width: 100%;
             padding: 10px;
-            border: none;
-            outline: none;
-        }
-        #send {
-            padding: 10px;
-            border: none;
-            background: #333;
+            margin-top: 10px;
+            background-color: #000;
             color: #fff;
-            cursor: pointer;
+            border: 1px solid #ccc;
         }
     </style>
 </head>
 <body>
+    <h1>Terminal</h1>
     <div id="terminal"></div>
-    <div id="input">
-        <input type="text" id="command" placeholder="Enter command">
-        <button id="send">Send</button>
-    </div>
-
-    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <input type="text" id="command" placeholder="Enter command">
     <script>
         const socket = io();
         const terminal = document.getElementById('terminal');
         const commandInput = document.getElementById('command');
-        const sendButton = document.getElementById('send');
-
-        sendButton.addEventListener('click', () => {
-            const command = commandInput.value;
-            socket.emit('runCommand', command);
-            commandInput.value = '';
-        });
 
         socket.on('output', (data) => {
-            const output = document.createElement('div');
-            output.textContent = data;
-            terminal.appendChild(output);
+            terminal.innerHTML += `<div>${data}</div>`;
             terminal.scrollTop = terminal.scrollHeight;
+        });
+
+        commandInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const command = commandInput.value;
+                socket.emit('runCommand', command);
+                commandInput.value = '';
+            }
         });
     </script>
 </body>
