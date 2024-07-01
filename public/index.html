@@ -53,17 +53,19 @@
         }
         .chat-input {
             display: flex;
+            flex-direction: column; /* Change to column to stack input and button */
             padding: 15px;
             background-color: #1e1e1e;
         }
-        .chat-input input {
-            flex: 1;
+        .chat-input textarea {
             padding: 10px;
             border: 1px solid #444;
             border-radius: 5px;
-            margin-right: 10px;
+            margin-bottom: 10px; /* Add margin to separate input and button */
             background-color: #333;
             color: #fff;
+            resize: none; /* Prevent resizing */
+            height: 60px; /* Set a fixed height */
         }
         .chat-input button {
             padding: 10px 15px;
@@ -87,7 +89,7 @@
             <!-- Messages will appear here -->
         </div>
         <div class="chat-input">
-            <input type="text" id="message-input" placeholder="Type a message...">
+            <textarea id="message-input" placeholder="Type a message..."></textarea>
             <button onclick="sendMessage()">Send</button>
         </div>
     </div>
@@ -122,7 +124,7 @@
 
         function addMessage(sender, text) {
             const messages = document.getElementById('messages');
-            const messageElement = document.createElement('pre'); // Use <pre> to preserve formatting
+            const messageElement = document.createElement('div');
             messageElement.className = `message ${sender}`;
             messageElement.textContent = text;
 
