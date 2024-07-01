@@ -172,7 +172,6 @@ app.get('/sswebhp', (req, res) => {
     .then((imageBuffer) => {
       const fileName = `${uuid()}.jpg`;
       const filePath = path.join(__dirname, 'tmp', fileName);
-      const url
 
       fs.writeFile(filePath, imageBuffer, (err) => {
         if (err) {
