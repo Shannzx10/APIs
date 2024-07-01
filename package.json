@@ -17,6 +17,7 @@
     "crypto": "^1.0.1",
     "dotenv": "^10.0.0",
     "express": "^4.19.2",
+    "fs": "^0.0.1-security",
     "form-data": "^4.0.0",
     "qs": "^6.12.1",
     "node-cron": "^3.0.3",
