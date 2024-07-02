@@ -20,7 +20,6 @@ let totalRequests = 0;
 let totalVisitors = 0;
 const visitors = new Set();
 
-app.use(express.static(path.join(__dirname, 'public')));
 app.use('/tmp', express.static(path.join(__dirname, 'tmp')));
 app.use(express.json());
 app.use(cors());
