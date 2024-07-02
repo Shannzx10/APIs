@@ -8,7 +8,7 @@ const { thinkany, tudouai, useadrenaline, GoodyAI, luminai, blackbox, CgtAi, Sim
 const { PlayStore, apkcombo, aptoide, BukaLapak, happymod, stickersearch, filmapik21, webtoons, resep, gore, mangatoon, android1, wattpad } = require('./scrape/search');
 const { tiktok, tiktoks, capcut, tiktokAll, ttStalker, ttSlide, instagram, pinterest } = require('./scrape/downloader');
 const { ephoto } = require('./scrape/ephoto');
-const { ssweb, obfus } = require('./scrape/tools');
+const { ssweb, obfus, uuid } = require('./scrape/tools');
 const config = require('./config');
 const msg = config.messages;
 const app = express();
