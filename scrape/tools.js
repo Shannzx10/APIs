@@ -66,9 +66,7 @@ async function obfus(query) {
     stringArrayThreshold: 1
   });
   const result = {
-    status: 200,
-    author: `Shannz`,
-    result: obfuscationResult.getObfuscatedCode()
+    data: obfuscationResult.getObfuscatedCode()
   }
   resolve(result)
   } catch (e) {
