@@ -8,7 +8,7 @@ const { thinkany, tudouai, useadrenaline, GoodyAI, luminai, blackbox, CgtAi, Sim
 const { PlayStore, apkcombo, aptoide, BukaLapak, happymod, stickersearch, filmapik21, webtoons, resep, gore, mangatoon, android1, wattpad } = require('./scrape/search');
 const { tiktok, tiktoks, capcut, tiktokAll, ttStalker, ttSlide, instagram, pinterest } = require('./scrape/downloader');
 const { ephoto } = require('./scrape/ephoto');
-const { ssweb } = require('./scrape/tools');
+const { ssweb, obfus } = require('./scrape/tools');
 const config = require('./config');
 const msg = config.messages;
 const app = express();
@@ -278,6 +278,8 @@ app.get('/downloader/ttslide', requestanUrl(ttSlide));
 app.get('/downloader/capcut', requestanUrl(capcut));
 app.get('/downloader/ttstalk', requestan(ttStalker));
 app.get('/downloader/instagram', requestanUrl(instagram));
+
+app.get('/tools/encrypt', requestan(obfus));
 
 createRoute('writetext', 'https://en.ephoto360.com/write-text-on-wet-glass-online-589.html');
 createRoute('blackpinklogo', 'https://en.ephoto360.com/create-blackpink-logo-online-free-607.html');
